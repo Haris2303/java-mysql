@@ -1,7 +1,5 @@
 package com.controller;
 
-import java.sql.ResultSet;
-
 import com.config.Config;
 import com.model.Mahasiswa;
 import com.view.Footer;
@@ -20,9 +18,21 @@ public class MahasiswaController {
 
     public static void listData() {
         try {
-            Config.clearScreen();
             System.out.println("            DATA MAHASISWA                ");
             System.out.println("+------------------------------------+");
+            getAllData();
+            System.out.println("+------------------------------------+");
+            Footer.display();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        display();
+    }
+
+    public static void getAllData() {
+        try {
+            Config.clearScreen();
 
             if (Boolean.FALSE.equals(mahasiswa.getAll())) { // jika hasil query kosong / tidak ada data
                 System.out.println(" Belum ada data!");
@@ -34,15 +44,11 @@ public class MahasiswaController {
                     System.out.println(
                             String.format(" %s (%s) - %s", nama, nim, email));
                 } while (Config.resultSet.next());
+                System.out.println();
             }
-
-            System.out.println("+------------------------------------+");
-            Footer.display();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        display();
     }
 
     public static void createData() {
@@ -58,7 +64,9 @@ public class MahasiswaController {
     }
 
     public static void updateData() {
+        getAllData();
         try {
+            
             if (Boolean.TRUE.equals(mahasiswa.update())) {
                 System.out.println("Data berhasil diubah!!");
             }
@@ -70,6 +78,7 @@ public class MahasiswaController {
     }
 
     public static void deleteData() {
+        getAllData();
         try {
             if (Boolean.TRUE.equals(mahasiswa.delete())) {
                 System.out.println("Data berhasil dihapus!!");
