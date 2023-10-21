@@ -1,7 +1,6 @@
 package com.model;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 
 import com.config.Config;
 import com.core.Database;
