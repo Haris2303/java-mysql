@@ -29,9 +29,10 @@ public class Database {
     }
 
     // disconnect database
-    public void disconnect() {
+    public static void disconnect() {
         if (connection != null) {
             try {
+                Config.statement.close();
                 connection.close();
                 connection = null;
             } catch (SQLException e) {

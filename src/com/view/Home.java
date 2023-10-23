@@ -1,7 +1,10 @@
 package com.view;
 
+import javax.xml.crypto.Data;
+
 import com.config.Config;
 import com.controller.MahasiswaController;
+import com.core.Database;
 
 public class Home {
 
@@ -26,6 +29,7 @@ public class Home {
             switch (pilihan) {
                 case 0: // jika pilihan 0
                     System.exit(0); // program dihentikan
+                    Database.disconnect();
                     break;
                 case 1: // jika pilihan 1
                     MahasiswaController.listData(); // memanggil method tambahDataSiswa

@@ -1,13 +1,12 @@
 package com.controller;
 
-import com.config.Config;
 import com.model.Mahasiswa;
 import com.view.Footer;
 import com.view.Home;
 
 public class MahasiswaController {
 
-    private static Mahasiswa mahasiswa = new Mahasiswa();
+    private static Mahasiswa mahasiswa = new Mahasiswa("mahasiswa");
 
     private MahasiswaController() {
     }
@@ -20,7 +19,7 @@ public class MahasiswaController {
         try {
             System.out.println("            DATA MAHASISWA                ");
             System.out.println("+------------------------------------+");
-            getAllData();
+            mahasiswa.getAll();
             System.out.println("+------------------------------------+");
             Footer.display();
         } catch (Exception e) {
@@ -28,27 +27,6 @@ public class MahasiswaController {
         }
 
         display();
-    }
-
-    public static void getAllData() {
-        try {
-            Config.clearScreen();
-
-            if (Boolean.FALSE.equals(mahasiswa.getAll())) { // jika hasil query kosong / tidak ada data
-                System.out.println(" Belum ada data!");
-            } else {
-                do { // jika tidak kosong, lakukan looping
-                    String nim = Config.resultSet.getString("nim");
-                    String nama = Config.resultSet.getString("nama");
-                    String email = Config.resultSet.getString("email");
-                    System.out.println(
-                            String.format(" %s (%s) - %s", nama, nim, email));
-                } while (Config.resultSet.next());
-                System.out.println();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static void createData() {
@@ -64,9 +42,9 @@ public class MahasiswaController {
     }
 
     public static void updateData() {
-        getAllData();
+        mahasiswa.getAll();
         try {
-            
+
             if (Boolean.TRUE.equals(mahasiswa.update())) {
                 System.out.println("Data berhasil diubah!!");
             }
@@ -78,7 +56,7 @@ public class MahasiswaController {
     }
 
     public static void deleteData() {
-        getAllData();
+        mahasiswa.getAll();
         try {
             if (Boolean.TRUE.equals(mahasiswa.delete())) {
                 System.out.println("Data berhasil dihapus!!");
