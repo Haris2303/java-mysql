@@ -3,38 +3,38 @@ package com.model;
 import java.sql.PreparedStatement;
 
 import com.config.Config;
-import com.core.Database;
+import com.core.BaseModel;
 
-public class Mahasiswa {
+public class Mahasiswa extends BaseModel {
 
-    private Database db;
-
-    public Mahasiswa() {
-        db = new Database();
+    public Mahasiswa(String table) {
+        super(table);
     }
 
-    public Boolean getAll() {
-        String sql = "SELECT nim, nama, email FROM mahasiswa";
-        Boolean next = false;
-
+    public void getAll() {
         try {
-            PreparedStatement statement = db.connect().prepareStatement(sql);
+            Config.clearScreen();
 
-            // jalankan query SQL
-            Config.resultSet = statement.executeQuery(sql);
-
-            next = Config.resultSet.next();
+            if (Boolean.FALSE.equals(select("*"))) { // jika hasil query kosong / tidak ada data
+                System.out.println(" Belum ada data!");
+            } else {
+                do { // jika tidak kosong, lakukan looping
+                    String nim = Config.resultSet.getString("nim");
+                    String nama = Config.resultSet.getString("nama");
+                    String email = Config.resultSet.getString("email");
+                    System.out.println(
+                            String.format(" %s (%s) - %s", nama, nim, email));
+                } while (Config.resultSet.next());
+                System.out.println();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return next;
-
     }
 
     public Boolean create() {
-        Boolean isCreate = false;
-        Config.clearScreen();
+        String sql = "";
+
         try {
             // ambil input dari user
             System.out.print("NIM: ");
@@ -46,26 +46,19 @@ public class Mahasiswa {
             System.out.print("Email: ");
             String email = Config.input.readLine().trim();
 
-            String sql = "INSERT INTO mahasiswa (id, nim, nama, email) VALUE(NULL, '%s', '%s','%s')";
+            sql = "INSERT INTO mahasiswa (id, nim, nama, email) VALUE(NULL, '%s', '%s','%s')";
             sql = String.format(sql, nim, nama, email); // memformat jadi string
 
-            try (PreparedStatement statement = db.connect().prepareStatement(sql)) {
-                // menjalankan query SQL
-                statement.execute(sql);
-
-                isCreate = true;
-
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return isCreate;
+        return create(sql);
 
     }
 
     public Boolean update() {
-        Boolean isUpdate = false;
+        String sql = "";
 
         try {
             System.out.print("NIM yang mau diedit: ");
@@ -80,26 +73,19 @@ public class Mahasiswa {
             System.out.print("Email: ");
             String email = Config.input.readLine().trim();
 
-            String sql = "UPDATE mahasiswa SET nim= '%s', nama='%s', email='%s' WHERE nim='%s'";
+            sql = "UPDATE mahasiswa SET nim= '%s', nama='%s', email='%s' WHERE nim='%s'";
             sql = String.format(sql, nimbaru, nama, email, nim); // memformat jadi string
-
-            PreparedStatement statement = db.connect().prepareStatement(sql);
-
-            // menjalankan query SQL
-            statement.execute(sql);
-
-            isUpdate = true;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return isUpdate;
+        return update(sql);
 
     }
 
     public Boolean delete() {
-        Boolean isDelete = false;
+        String sql = "";
 
         try {
             // ambil input dari user
@@ -107,19 +93,13 @@ public class Mahasiswa {
             String nim = Config.input.readLine().trim();
 
             // buat query SQL
-            String sql = String.format("DELETE FROM mahasiswa WHERE nim=%s", nim);
+            sql = String.format("DELETE FROM mahasiswa WHERE nim=%s", nim);
 
-            PreparedStatement statement = db.connect().prepareStatement(sql);
-
-            // jalankan query SQL
-            statement.execute(sql);
-
-            isDelete = true;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return isDelete;
+        return delete(sql);
     }
 
 }
